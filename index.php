@@ -21,196 +21,319 @@ $testimonials = $stmt->fetchAll();
 include 'includes/header.php';
 ?>
 
-
-<!-- Hero Section (Carousel) -->
-<section class="hero-carousel">
-    <div id="mainHeroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            <!-- Slide 1: Blue gradient -->
-            <div class="carousel-item active">
-                <div class="hero-slide" style="background-image: radial-gradient(1200px 600px at 80% -10%, rgba(255,255,255,.15), transparent), var(--gradient-primary);">
-                    <div class="hero-overlay"></div>
-                    <div class="container">
-                        <div class="row align-items-center">
-                            <div class="col-lg-7" data-aos="fade-right">
-                                <span class="badge badge-silver mb-3 px-3 py-2 rounded-pill fw-semibold">PT. IRGHA REKSA JAYA</span>
-                                <h1 class="hero-title text-white">CRUNCH it ONCE,<br />CRAVE IT FOREVER!</h1>
-                                <p class="hero-subtitle text-white-50">Snack premium CHIBOR yang renyah & menggugah selera. Diproduksi dengan standar kualitas tinggi.</p>
-                                <div class="d-flex gap-3 flex-wrap">
-                                    <a href="products.php" class="btn btn-hero btn-hero-primary">Lihat Produk</a>
-                                    <a href="contact.php" class="btn btn-hero btn-hero-outline">Hubungi Kami</a>
-                                </div>
-                            </div>
-                        </div>
+<!-- Hero Section -->
+<section class="hero-section text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        <span class="text-white">CRUNCH it ONCE,</span><br>
+                        <span class="text-white">CRAVE IT FOREVER!</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Nikmati kelezatan snack premium CHIBOR yang renyah dan menggugah selera.
+                        Diproduksi dengan standar kualitas tinggi oleh PT. Irgha Reksa Jasa.
+                    </p>
+                    <div class="hero-cta d-flex flex-wrap">
+                        <a href="products.php" class="btn btn-hero btn-hero-primary">
+                            <i class="fas fa-shopping-bag me-2"></i>Lihat Produk
+                        </a>
+                        <a href="https://wa.me/6282320208899" target="_blank" class="btn btn-hero btn-hero-outline">
+                            <i class="fab fa-whatsapp me-2"></i>Pesan Sekarang
+                        </a>
                     </div>
                 </div>
             </div>
-            <!-- Slide 2: Blue → Silver gradient -->
-            <div class="carousel-item">
-                <div class="hero-slide" style="background-image: url('assets/images/cheese.png');">
-                    <div class="hero-overlay"></div>
-                    <div class="container">
-                        <div class="row align-items-center">
-                            <div class="col-lg-7" data-aos="fade-up">
-                                <span class="badge badge-silver mb-3 px-3 py-2 rounded-pill fw-semibold">Quality First</span>
-                                <h2 class="text-white mb-3">HACCP • ISO 22000 • Halal</h2>
-                                <p class="text-white-50">Keamanan dan mutu terjamin dari bahan baku hingga distribusi. Siap OEM & private label.</p>
-                                <div class="d-flex gap-3 flex-wrap">
-                                    <a href="about.php" class="btn btn-hero btn-hero-primary">Tentang Kami</a>
-                                    <a href="faq.php" class="btn btn-hero btn-hero-outline">Lihat Sertifikasi</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="text-center">
+                    <img src="assets/images/trolichibor.png" alt="CHIBOR Product" class="img-fluid hover-scale" style="max-height: 500px;">
                 </div>
             </div>
-            <!-- Slide 3: Background image -->
-            <div class="carousel-item">
-                <div class="hero-slide" style="background-image: url('assets/images/IRJ-OFFICE.png');">
-                    <div class="hero-overlay"></div>
-                    <div class="container">
-                        <div class="row align-items-center">
-                            <div class="col-lg-7" data-aos="fade-right">
-                                <span class="badge badge-silver mb-3 px-3 py-2 rounded-pill fw-semibold">Distribusi Luas</span>
-                                <h2 class="text-white mb-3">Produk Selalu Siap</h2>
-                                <p class="text-white-50">Jaringan ritel & distributor aktif, dukungan sales responsif, dan pengiriman tepat waktu.</p>
-                                <div class="d-flex gap-3 flex-wrap">
-                                    <a href="products.php" class="btn btn-hero btn-hero-primary">Cek Katalog</a>
-                                    <a href="contact.php" class="btn btn-hero btn-hero-outline">Minta Penawaran</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#mainHeroCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#mainHeroCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#mainHeroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#mainHeroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#mainHeroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
         </div>
     </div>
 </section>
 
-<!-- About / Difference -->
-<section class="section">
-    <div class="row align-items-center">
-        <div class="col-lg-6 mb-4">
-            <span class="badge badge-silver px-3 py-2 rounded-pill fw-semibold">Tentang Kami</span>
-            <h2 class="section-title">Produsen Snack Premium — Biru & Silver yang Modern</h2>
-            <p class="section-subtitle">Kami memproduksi snack renyah dan lezat dengan standar keamanan pangan tinggi (HACCP, ISO 22000, Halal). Siap OEM & private label untuk pasar domestik maupun ekspor.</p>
-            <div class="values">
-                <div class="value">
-                    <div class="t">Kualitas Terjamin</div>
-                    <div class="d">QC berlapis dan traceability batch untuk konsistensi rasa & keamanan.</div>
-                </div>
-                <div class="value">
-                    <div class="t">R&D In‑house</div>
-                    <div class="d">Formulasi resep khusus sesuai kebutuhan brand/ritel Anda.</div>
-                </div>
-                <div class="value">
-                    <div class="t">Distribusi Luas</div>
-                    <div class="d">Pengiriman tepat waktu dengan dukungan tim sales yang responsif.</div>
-                </div>
+<!-- About Section -->
+<section class="section-padding bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0" data-aos="fade-right">
+                <img src="assets/images/IRJ-OFFICE.png" alt="Tentang CHIBOR" class="img-fluid rounded shadow-lg">
             </div>
-        </div>
-        <div class="col-lg-6 mb-4">
-            <div class="cta">
-                <div class="title">Siap Kolaborasi?</div>
-                <p class="sub mb-3">Hubungi kami untuk sampel produk, spesifikasi teknis, atau pengembangan resep custom.</p>
-                <a href="contact.php" class="btn btn-primary">Hubungi Sales</a>
-                <a href="products.php" class="btn btn-outline-primary ms-2">Lihat Katalog</a>
+            <div class="col-lg-6" data-aos="fade-left">
+                <h2 class="section-title">Tentang <span class="gradient-text">CHIBOR</span></h2>
+                <p class="section-subtitle">
+                    PT. IRGHA REKSA JAYA telah berdedikasi menghadirkan produk snack berkualitas tinggi sejak 12 Juli 2023.
+                </p>
+                <p class="mb-4">
+                    CHIBOR adalah produk unggulan kami yang menghadirkan pengalaman rasa yang tak terlupakan.
+                    Dengan proses produksi yang higienis dan menggunakan bahan-bahan pilihan,
+                    kami berkomitmen memberikan yang terbaik untuk pelanggan.
+                </p>
+                <div class="row text-center mb-4">
+                    <div class="col-4">
+                        <div class="stat-number gradient-text" data-target="100">0</div>
+                        <div class="stat-label">% Halal</div>
+                    </div>
+                    <div class="col-4">
+                        <div class="stat-number gradient-text" data-target="2023">0</div>
+                        <div class="stat-label">Tahun Berdiri</div>
+                    </div>
+                    <div class="col-4">
+                        <div class="stat-number gradient-text" data-target="1000">0</div>
+                        <div class="stat-label">+ Pelanggan</div>
+                    </div>
+                </div>
+                <a href="about.php" class="btn btn-primary btn-lg">
+                    Selengkapnya <i class="fas fa-arrow-right ms-2"></i>
+                </a>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Featured Products -->
-<section class="section band">
-    <div class="text-center mb-4">
-        <h2 class="section-title">Produk Unggulan</h2>
-        <p class="section-subtitle">Pilihan terbaik dari koleksi CHIBOR yang wajib Anda coba</p>
-    </div>
-    <div class="product-grid">
-        <?php foreach ($featured_products as $p): ?>
-            <a class="product-card text-decoration-none" href="products.php?id=<?= $p['id'] ?>">
-                <img class="product-img" src="assets/images/<?= htmlspecialchars($p['foto']) ?>" alt="<?= htmlspecialchars($p['nama']) ?>">
-                <div class="product-body">
-                    <div class="product-title"><?= htmlspecialchars($p['nama']) ?></div>
-                    <div class="product-meta"><?= htmlspecialchars($p['nama_kategori'] ?? '') ?> <?= isset($p['nama_subkategori']) ? '• ' . htmlspecialchars($p['nama_subkategori']) : '' ?></div>
+<section class="section-padding">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="section-title">Produk <span class="gradient-text">Unggulan</span></h2>
+            <p class="section-subtitle">Pilihan terbaik dari koleksi CHIBOR yang wajib Anda coba</p>
+        </div>
+
+        <div class="row">
+            <?php foreach ($featured_products as $index => $product): ?>
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="<?= $index * 100 ?>">
+                    <div class="card product-card h-100">
+                        <div class="position-relative">
+                            <img src="assets/images/<?= h($product['gambar']) ?>"
+                                alt="<?= h($product['nama']) ?>"
+                                class="card-img-top product-image">
+                            <div class="product-badge"><?= h($product['nama_kategori']) ?></div>
+                        </div>
+                        <div class="product-info">
+                            <h5 class="product-title"><?= h($product['nama']) ?></h5>
+                            <p class="product-description"><?= h($product['deskripsi']) ?></p>
+                            <?php
+                            // Membuat link WhatsApp yang benar
+                            $pesan_wa = "Halo, saya ingin memesan produk " . h($product['nama']) . ".";
+                            $link_wa_final = "https://wa.me/6282320208899?text=" . urlencode($pesan_wa);
+                            ?>
+                            <a href="<?= $link_wa_final ?>"
+                                target="_blank"
+                                class="btn btn-whatsapp w-100">
+                                <i class="fab fa-whatsapp me-2"></i>Pesan via WhatsApp
+                            </a>
+                        </div>
+                    </div>
                 </div>
+            <?php endforeach; ?>
+        </div>
+
+        <div class="text-center mt-5" data-aos="fade-up">
+            <a href="products.php" class="btn btn-primary btn-lg">
+                Lihat Semua Produk <i class="fas fa-arrow-right ms-2"></i>
             </a>
-        <?php endforeach; ?>
+        </div>
     </div>
 </section>
 
-<!-- Sustainability KPIs -->
-<section class="section">
-    <div class="row align-items-center">
-        <div class="col-lg-6 mb-4">
-            <h2 class="section-title">Sustainability Nyata</h2>
-            <p class="section-subtitle">Kami mengurangi food waste, menggunakan material kemasan recyclable, dan bermitra dengan petani lokal. Setiap inisiatif kami ukur lewat KPI yang transparan.</p>
-            <div class="kpis">
-                <div class="kpi">
-                    <div class="n">-22%</div>
-                    <div class="l">Emisi scope 2</div>
-                </div>
-                <div class="kpi">
-                    <div class="n">95%</div>
-                    <div class="l">Material recyclable</div>
-                </div>
-                <div class="kpi">
-                    <div class="n">&gt;1.5K</div>
-                    <div class="l">Petani bermitra</div>
+<!-- Why Choose Us -->
+<section class="section-padding bg-gradient text-white">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="section-title text-primary">Mengapa Memilih <span class="text-warning">CHIBOR?</span></h2>
+            <p class="section-subtitle text-light">Keunggulan yang membuat CHIBOR menjadi pilihan terbaik</p>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-certificate fa-3x text-warning"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark">Sertifikat Halal</h5>
+                    <p class="text-dark">Diproduksi dengan standar halal dan higienis terjamin</p>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-6 mb-4">
-            <div class="cta">
-                <div class="title">Mau kunjungi pabrik?</div>
-                <p class="sub mb-3">Jadwalkan tur pabrik kami dan lihat langsung bagaimana standar kualitas diterapkan.</p>
-                <a href="contact.php" class="btn btn-primary">Jadwalkan Kunjungan</a>
+            <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-award fa-3x text-warning"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark">Kualitas Premium</h5>
+                    <p class="text-dark">Menggunakan bahan pilihan dengan cita rasa yang unik</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-shipping-fast fa-3x text-warning"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark">Pengiriman Cepat</h5>
+                    <p class="text-dark">Layanan pengiriman ke seluruh Indonesia</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
+                <div class="text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-heart fa-3x text-warning"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark">Kepuasan Pelanggan</h5>
+                    <p class="text-dark">Komitmen memberikan yang terbaik untuk setiap pelanggan</p>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Testimonials -->
-<section class="section band">
-    <div class="text-center mb-4">
-        <h2 class="section-title">Apa Kata Klien</h2>
-        <p class="section-subtitle">Testimoni singkat dari pelanggan B2B dan ritel</p>
-    </div>
-    <div class="row">
-        <?php foreach ($testimonials as $t): ?>
-            <div class="col-md-4 mb-3">
-                <div class="value h-100">
-                    <div class="d">“<?= htmlspecialchars($t['isi']) ?>”</div>
-                    <div class="t mt-3">— <?= htmlspecialchars($t['nama']) ?>, <?= htmlspecialchars($t['jabatan'] ?? 'Pelanggan') ?></div>
+<?php if (!empty($testimonials)): ?>
+    <section class="section-padding bg-light">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Apa Kata <span class="gradient-text">Pelanggan</span></h2>
+                <p class="section-subtitle">Testimoni dari pelanggan yang telah merasakan kelezatan CHIBOR</p>
+            </div>
+
+            <div class="row">
+                <?php foreach ($testimonials as $index => $testimonial): ?>
+                    <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="<?= $index * 100 ?>">
+                        <div class="testimonial-card">
+                            <img src="assets/images/testimonials/<?= h($testimonial['foto']) ?>"
+                                alt="<?= h($testimonial['nama_pelanggan']) ?>"
+                                class="testimonial-avatar">
+                            <div class="testimonial-stars text-warning">
+                                <?php for ($i = 0; $i < 5; $i++): ?>
+                                    <?php if ($i < $testimonial['rating']): ?>
+                                        <i class="fas fa-star"></i> <?php else: ?>
+                                        <i class="far fa-star"></i> <?php endif; ?>
+                                <?php endfor; ?>
+                            </div>
+                            <p class="testimonial-text">"<?= h($testimonial['komentar']) ?>"</p>
+                            <h6 class="testimonial-name"><?= h($testimonial['nama_pelanggan']) ?></h6>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <div class="text-center mt-5" data-aos="fade-up">
+                <a href="testimoni.php" class="btn btn-primary btn-lg">
+                    Lihat Semua Testimoni <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+<?php endif; ?>
+
+<!-- Call to Action -->
+<section class="section-padding bg-gradient text-white">
+    <div class="container text-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-8" data-aos="zoom-in">
+                <h2 class="section-title text-primary mb-4">Siap Merasakan <span class="text-warning">Kelezatan CHIBOR?</span></h2>
+                <p class="section-subtitle text-dark mb-5">
+                    Jangan tunggu lagi! Pesan sekarang dan rasakan sendiri kelezatan yang bikin nagih.
+                    Dapatkan penawaran menarik untuk pembelian dalam jumlah besar.
+                </p>
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <a href="https://wa.me/6282320208899?text=Halo, saya ingin memesan produk CHIBOR"
+                        target="_blank"
+                        class="btn btn-pesan btn-lg px-5">
+                        <i class="fab fa-whatsapp me-2"></i>Pesan via WhatsApp
+                    </a>
+                    <a href="products.php" class="btn btn-outline-dark btn-lg px-5">
+                        <i class="fas fa-shopping-bag me-2"></i>Lihat Katalog
+                    </a>
                 </div>
             </div>
-        <?php endforeach; ?>
-    </div>
-</section>
-
-<!-- Final CTA -->
-<section class="section">
-    <div class="cta text-center">
-        <div class="title">Ingin Sampel Produk atau Penawaran?</div>
-        <p class="sub mb-3">Tim kami siap membantu spesifikasi, MOQ, hingga private label.</p>
-        <a href="contact.php" class="btn btn-primary">Hubungi Kami</a>
-        <a href="faq.php" class="btn btn-outline-primary ms-2">Lihat FAQ</a>
+        </div>
     </div>
 </section>
 
 <?php
+$extra_js = '
+<script>
+    // Custom JavaScript for homepage
+    document.addEventListener("DOMContentLoaded", function() {
+        // Animate hero text
+        const heroTitle = document.querySelector(".hero-title");
+        if (heroTitle) {
+            heroTitle.style.opacity = "0";
+            heroTitle.style.transform = "translateY(30px)";
+            setTimeout(() => {
+                heroTitle.style.transition = "all 1s ease";
+                heroTitle.style.opacity = "1";
+                heroTitle.style.transform = "translateY(0)";
+            }, 500);
+        }
+        
+        // Product hover effects
+        document.querySelectorAll(".product-card").forEach(card => {
+            card.addEventListener("mouseenter", function() {
+                this.style.transform = "translateY(-10px)";
+            });
+            
+            card.addEventListener("mouseleave", function() {
+                this.style.transform = "translateY(0)";
+            });
+        });
+        
+        // Counter animation for stats
+        const observerOptions = {
+            threshold: 0.7,
+            triggerOnce: true
+        };
+        
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counter = entry.target;
+                    const target = parseInt(counter.getAttribute("data-target"));
+                    const duration = 2000;
+                    const step = target / (duration / 16);
+                    let current = 0;
+                    
+                    const timer = setInterval(() => {
+                        current += step;
+                        if (target === 2023) {
+                            counter.textContent = Math.floor(current);
+                        } else {
+                            counter.textContent = Math.floor(current);
+                        }
+                        
+                        if (current >= target) {
+                            counter.textContent = target;
+                            clearInterval(timer);
+                        }
+                    }, 16);
+                    
+                    statsObserver.unobserve(counter);
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll(".stat-number").forEach(counter => {
+            statsObserver.observe(counter);
+        });
+    });
+    
+    // Custom order product function
+    function orderProduct(productName) {
+        const message = `Halo, saya tertarik dengan ${productName}. Bisa tolong berikan informasi lebih lanjut mengenai harga dan cara pemesanan?`;
+        const whatsappUrl = `https://wa.me/6282320208899?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, "_blank");
+        
+        // Track product interest (optional analytics)
+        if (typeof gtag !== "undefined") {
+            gtag("event", "product_interest", {
+                "event_category": "engagement",
+                "event_label": productName
+            });
+        }
+    }
+</script>
+';
+
 include 'includes/footer.php';
 ?>
