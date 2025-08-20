@@ -1,10 +1,6 @@
 /* assets/css/style.css */
 
 :root {
-    --silver-start:#f6f7f9;
-    --silver-end:#c0c0c0;
-    --gradient-blue-silver: linear-gradient(135deg, var(--primary-color) 0%, var(--silver-end) 100%);
-
     /* 1. Mengubah variabel kustom Anda agar konsisten */
     --primary-color: #00258f; /* Warna baru Anda */
     --primary-dark: #021f70;  /* Versi lebih gelap dari warna baru Anda */
@@ -63,9 +59,68 @@ body {
     font-weight: 700;
     font-size: 1.5rem;
 }
+.navbar-nav {
+    display: flex;
+    gap: 15px; /* atur jaraknya di sini */
+}
+/* NAV harus boleh menampung dropdown */
+.navbar { 
+  overflow: visible; 
+  z-index: 1030; 
+}
 
+/* Stronger & smooth hover dropdown (tanpa kedip) */
+.dropdown-hover { 
+  position: relative; 
+}
+.dropdown-hover .dropdown-menu {
+  display: block; /* selalu block, sembunyikan via visibility */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity .18s ease, transform .18s ease, visibility 0s linear .18s;
+  margin-top: 0; /* hapus celah supaya hover tidak putus */
+  pointer-events: none; /* saat hidden, tidak ganggu hover */
+  min-width: 220px;
+  border-radius: 16px;
+  box-shadow: 0 24px 48px rgba(2,6,23,.14);
+}
+
+@media (min-width: 992px) {
+  .dropdown-hover:hover > .dropdown-menu,
+  .dropdown-hover:focus-within > .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition-delay: 0s;
+    pointer-events: auto;
+  }
+}
+
+/* Items */
+.dropdown-item {
+  font-family: 'Montserrat', sans-serif;
+  font-size: .8125rem; /* 13px */
+  font-weight: 500;
+  letter-spacing: .3px;
+  padding: .6rem 1rem;
+}
+.dropdown-item:hover {
+  background: #f1f5f9;
+  color: var(--brand-700);
+}
+.dropdown-item.active,
+.dropdown-item:active {
+  background: #eaf1ff;
+  color: var(--brand-700);
+}
 .nav-link {
-    font-weight: 500;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 550; /* light */
+    font-size: 0.70rem; /* 12px */
+    letter-spacing: 0.5px;      /* spasi antar huruf */
+    text-transform: uppercase;/* huruf besar semua */
+    color: #000 !important; /* warna hitam */
     transition: color 0.3s ease;
     position: relative;
 }
@@ -76,7 +131,7 @@ body {
 
 .nav-link.active {
     color: var(--primary-color) !important;
-    font-weight: 600;
+    font-weight: 550;
 }
 
 .nav-link.active::after {
@@ -150,6 +205,12 @@ body {
     border: 2px solid white; /* Border dibuat putih dari awal */
 }
 
+.btn-primary {
+    background-color: #00258f;
+    border-radius: 50px !important; /* angka besar bikin bulat */
+}
+
+
 /* Tombol "Lihat Produk" */
 .btn-hero-primary {
     background: white;
@@ -191,6 +252,25 @@ body {
     background-color: #ffaf37;
     color: white;
 }
+
+.btn-order {
+    background-color: #00258f;       /* warna hitam */
+    color: #fff;                  /* teks putih */
+    border: none;
+    border-radius: 24px;          /* radius agak bulat */
+    padding: 10px 20px;           /* tinggi & lebar tombol */
+    font-weight: 500;             /* agak tebal tapi tidak bold */
+    font-size: 0.875rem;          /* 14px */
+    letter-spacing: 0.5px;        /* jarak huruf sedikit */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-order:hover {
+    background-color: #10318e;       /* abu tua saat hover */
+    color: #fff; 
+    transform: translateY(-2px);  /* efek naik sedikit */
+}
+
 /* Section Styles */
 .section-padding {
     padding: 80px 0;
@@ -236,6 +316,7 @@ body {
 .product-item.hidden {
     display: none;
 }
+
 /* Product Cards */
 .product-card {
     border: none;
@@ -784,54 +865,137 @@ body {
     }
 }
 
-/* Hero Carousel */
-.hero-carousel {min-height:100vh; position:relative;}
-.hero-carousel .carousel-item{min-height:100vh; position:relative;}
-.hero-slide{
-  position:relative; min-height:100vh; display:flex; align-items:center;
-  background-size:cover; background-position:center; background-repeat:no-repeat;
+/* Category tabs (pills) */
+.category-tabs { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
+.category-tabs .pill{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:10px 16px;
+  border-radius:999px;
+  border:1px solid var(--brand-300, #93c5fd);
+  background:#fff;
+  color:#0b1220;
+  font-family:'Montserrat', sans-serif;
+  font-weight:600;
+  font-size:.875rem; /* 14px */
+  letter-spacing:.2px;
+  text-decoration:none;
+  transition:.2s;
 }
-.hero-overlay{position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,.25) 0%, rgba(0,0,0,.35) 60%, rgba(0,0,0,.45) 100%);}
-.hero-slide .container{position:relative; z-index:2;}
-.badge-silver{background:linear-gradient(135deg, var(--silver-start), var(--silver-end)); color:#0b1220; border:none;}
-.btn-hero-primary{background:white; color:var(--primary-color);}
-.btn-hero-outline{border-color:#fff; color:#fff;}
-
-
-/* === Brand Typography (Costa Vida feel) === */
-body { font-family: 'Open Sans', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; }
-h1,h2,h3,.hero-title,.section-title { font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans'; letter-spacing:-0.02em; }
-.section-title { font-weight:700; }
-.hero-title { font-weight:800; }
-
-
-/* === THEME OVERHAUL START === */
-:root{
-  --brand-50:#eff6ff; --brand-100:#dbeafe; --brand-200:#bfdbfe; --brand-300:#93c5fd;
-  --brand-400:#60a5fa; --brand-500:#3b82f6; --brand-600:#2563eb; --brand-700:#1d4ed8;
-  --brand-800:#1e40af; --brand-900:#1e3a8a;
-  --silver-start:#f6f7f9; --silver-end:#c0c0c0;
-  --gradient-primary: linear-gradient(135deg, var(--brand-700) 0%, var(--brand-500) 100%);
-  --gradient-blue-silver: linear-gradient(135deg, var(--brand-700) 0%, var(--silver-end) 100%);
-  --text:#0b1220; --muted:#6b7280; --bg:#ffffff; --surface:#f8fafc; --border:#e5e7eb;
-  --radius-xl:20px; --radius-lg:16px; --radius-md:12px;
-  --shadow-1:0 6px 18px rgba(2,6,23,.06); --shadow-2:0 10px 30px rgba(2,6,23,.08);
+.category-tabs .pill:hover{
+  border-color:var(--brand-600, #2563eb);
+  color:var(--brand-700, #1d4ed8);
+  background:#f8fbff;
 }
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;500&display=swap');
-html{scroll-behavior:smooth;}
-body{font-family:'Open Sans',system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial,'Noto Sans'; color:var(--text); background:var(--bg);}
-h1,h2,h3,.section-title,.hero-title{font-family:'Montserrat',system-ui; letter-spacing:-.02em; color:#0b1220;}
-.section{max-width:1120px; margin-inline:auto; padding:80px 20px;}
-.section-title{font-weight:800; font-size:40px; line-height:1.1; margin:0 0 12px;}
-.section-subtitle{color:var(--muted); font-size:18px; margin-bottom:32px;}
-.navbar{transition:background .25s, box-shadow .25s;} .navbar.scrolled{background:#fff !important; box-shadow:var(--shadow-1);} .nav-link{font-weight:600;} .nav-link.active,.nav-link:hover{color:var(--brand-700)!important;}
-.btn-primary{background:var(--brand-600); border-color:transparent; border-radius:14px; padding:10px 16px; font-weight:700;} .btn-primary:hover{background:var(--brand-700);}
-.hero-carousel{min-height:100vh; position:relative;} .hero-carousel .carousel-item{min-height:100vh;} .hero-slide{min-height:100vh; display:flex; align-items:center; background-size:cover; background-position:center; position:relative;} .hero-overlay{position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,.25) 0%, rgba(0,0,0,.35) 60%, rgba(0,0,0,.45) 100%);} .hero-slide .container{position:relative; z-index:2;} .badge-silver{background:linear-gradient(135deg, var(--silver-start), var(--silver-end)); color:#0b1220; border:none;} .hero-title{font-weight:800; font-size:52px;} .hero-subtitle{font-size:18px;} .btn-hero{display:inline-flex; align-items:center; gap:10px; padding:14px 18px; border-radius:18px; border:2px solid white; text-decoration:none; transition:.2s;} .btn-hero-primary{background:white; color:var(--brand-700); border-color:white;} .btn-hero-primary:hover{transform:translateY(-2px);} .btn-hero-outline{background:transparent; color:#fff; border-color:#fff;} .btn-hero-outline:hover{background:rgba(255,255,255,.08);}
-.band{background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border);} .kpis{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px;} .kpi{background:#fff; border:1px solid var(--border); border-radius:var(--radius-lg); padding:18px; text-align:center; box-shadow:var(--shadow-1);} .kpi .n{font-weight:800; font-size:28px; color:var(--brand-700);} .kpi .l{color:var(--muted); font-size:12px;}
-.product-grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px;} .product-card{background:#fff; border:1px solid var(--border); border-radius:var(--radius-xl); overflow:hidden; box-shadow:var(--shadow-1); transition:transform .2s, box-shadow .2s;} .product-card:hover{transform:translateY(-4px); box-shadow:var(--shadow-2);} .product-img{aspect-ratio: 4/3; object-fit:cover; width:100%;} .product-body{padding:18px;} .product-title{font-weight:700; font-size:18px; margin:0 0 6px;} .product-meta{color:var(--muted); font-size:13px;}
-.values{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px;} .value{background:#fff; border:1px solid var(--border); border-radius:var(--radius-lg); padding:18px; box-shadow:var(--shadow-1);} .value .t{font-weight:700; margin-bottom:6px;} .value .d{color:var(--muted); font-size:14px;}
-.cta{background: radial-gradient(800px 200px at 80% -50%, rgba(37,99,235,.18), transparent), radial-gradient(800px 200px at 10% 150%, rgba(192,192,192,.22), transparent), #fff; border:1px solid var(--border); border-radius:var(--radius-xl); padding:40px; box-shadow:var(--shadow-1);} .cta .title{font-weight:800; font-size:32px;} .cta .sub{color:var(--muted);}
-footer{background:#0b1220; color:#cbd5e1;} footer a{color:#cbd5e1; text-decoration:none;} footer a:hover{color:#fff;}
-@media (max-width: 991px){ .product-grid{grid-template-columns:repeat(2,minmax(0,1fr));} .values{grid-template-columns:repeat(2,minmax(0,1fr));} .kpis{grid-template-columns:repeat(2,minmax(0,1fr));} .hero-title{font-size:40px;}}
-@media (max-width: 575px){ .product-grid,.values{grid-template-columns:1fr;} .kpis{grid-template-columns:1fr;} .section{padding:64px 16px;} .hero-title{font-size:36px;}}
-/* === THEME OVERHAUL END === */
+.category-tabs .pill.active{
+  background: var(--brand-600, #2563eb);
+  color:#fff;
+  border-color: var(--brand-600, #2563eb);
+}
+/* ===== CTA Pill ala Costa Vida ===== */
+.cta-pill{
+  display:grid;
+  grid-template-columns: 1.1fr .9fr;
+  align-items:center;
+  gap:40px;
+  padding:48px 56px;
+  border-radius:120px;                  /* kapsul super bulat */
+  background: linear-gradient(135deg, #00258f 0%, #0091FA 100%); /* biru; ganti jika mau teal */
+  color:#fff;
+  position:relative;
+  overflow:hidden;
+  box-shadow: 0 30px 80px rgba(13, 27, 57, .18);
+}
+/* bintik halus seperti texture */
+.cta-pill::after{
+  content:"";
+  position:absolute; inset:0;
+  background:
+    radial-gradient(rgba(255,255,255,.08) 1px, transparent 2px) 0 0/22px 22px,
+    radial-gradient(rgba(255,255,255,.06) 1px, transparent 2px) 11px 11px/22px 22px;
+  pointer-events:none;
+  mix-blend-mode: screen;
+}
+
+.cta-left .cta-eyebrow{
+  font-family: "Pacifico", cursive;
+  font-size: 24px;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.cta-left .cta-title{
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: clamp(32px, 5vw, 64px);
+  line-height: .98;
+  margin: 0 0 12px;
+}
+.cta-left .cta-sub{
+  margin: 0 0 20px;
+  color: rgba(255,255,255,.9);
+  font-size: 16px;
+}
+.cta-actions{ display:flex; gap:12px; flex-wrap:wrap; }
+
+/* Tombol utama (warna putih) */
+.btn-hero-dark {
+    padding: 12px 30px;
+    font-weight: 600;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid white;
+    background: white;
+    color: var(--primary-color);
+    box-shadow: var(--shadow-medium);
+}
+
+.btn-hero-dark:hover {
+    background: transparent;
+    border: 2px solid white !important;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: none;
+}
+
+.btn-hero-outline-dark {
+    background: transparent;
+    color: #fff;
+    border: 2px solid #fff; /* border putih awal */
+    padding: 10px 22px;
+    border-radius: 999px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-hero-outline-dark:hover {
+    background: white;
+    color: var(--primary-color);
+    border: 2px solid white !important; /* pastikan border tetap ada */
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
+
+/* Input email + tombol panah bulat */
+.cta-right{ text-align:right; }
+.pill-input{
+  display:flex; align-items:center; gap:12px;
+  background:#fff; padding:10px 10px 10px 18px; border-radius:999px;
+}
+.pill-field{
+  flex:1; border:0; outline:0; font-size:16px; color:#0b1220; background:transparent;
+}
+.pill-field::placeholder{ color:#94a3b8; }
+.pill-btn{
+  width:48px; height:48px; border-radius:999px; border:0; outline:0; cursor:pointer;
+  background:#0b0f19; color:#fff; display:grid; place-items:center;
+  transition: transform .15s ease, filter .15s ease;
+}
+.pill-btn:hover{ transform: translateY(-1px); filter: brightness(1.08); }
+.pill-hint{ display:block; margin-top:8px; opacity:.85; }
+
+/* Responsif */
+@media (max-width: 992px){
+  .cta-pill{ grid-template-columns: 1fr; border-radius:48px; padding:32px 24px; text-align:left; }
+  .cta-right{ text-align:left; }
+}

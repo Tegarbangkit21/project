@@ -2,7 +2,7 @@
 // admin/logout.php
 session_start();
 require_once '../includes/db.php';
-
+require_once '../includes/functions.php';
 // Destroy all session data
 session_destroy();
 

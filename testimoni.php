@@ -2,7 +2,7 @@
 // testimoni.php
 session_start();
 require_once 'includes/db.php';
-
+require_once 'includes/functions.php';
 $page_title = 'Testimoni';
 
 // Ambil semua testimoni

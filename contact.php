@@ -2,7 +2,7 @@
 // contact.php
 session_start();
 require_once 'includes/db.php';
-
+require_once 'includes/functions.php';
 $page_title = 'Kontak';
 $success_message = '';
 $error_message = '';

@@ -1,5 +1,12 @@
 <?php
 // includes/header.php
+try {
+    $stmt_cat_nav = $pdo->query("SELECT nama_kategori FROM kategori ORDER BY id ASC");
+    $nav_categories = $stmt_cat_nav->fetchAll(PDO::FETCH_COLUMN);
+} catch (PDOException $e) {
+    $nav_categories = [];
+}
+
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 <!DOCTYPE html>
@@ -41,8 +48,29 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <li class="nav-item">
                         <a class="nav-link <?= ($current_page == 'about.php') ? 'active' : '' ?>" href="about.php">Tentang Kami</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link <?= ($current_page == 'products.php') ? 'active' : '' ?>" href="products.php">Produk</a>
+                    <li class="nav-item dropdown dropdown-hover">
+                        <a class="nav-link dropdown-toggle <?= ($current_page == 'products.php' || $current_page == 'katalog.php') ? 'active' : '' ?>"
+                            href="products.php"
+                            id="navProduk" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Produk
+                        </a>
+                        <ul class="dropdown-menu shadow-lg" aria-labelledby="navProduk">
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <?php // Bagian ini akan mengambil kategori dari database secara dinamis 
+                            ?>
+                            <?php if (!empty($nav_categories)): ?>
+                                <?php foreach ($nav_categories as $category): ?>
+                                    <li>
+                                        <a class="dropdown-item" href="products.php?category=<?= urlencode(h($category)) ?>">
+                                            <?= h($category) ?>
+                                        </a>
+                                    </li>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <?= ($current_page == 'testimoni.php') ? 'active' : '' ?>" href="testimoni.php">Testimoni</a>

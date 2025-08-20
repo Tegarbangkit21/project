@@ -2,7 +2,7 @@
 // index.php
 session_start();
 require_once 'includes/db.php';
-
+require_once 'includes/functions.php';
 $page_title = 'Beranda';
 
 // Ambil beberapa produk featured untuk ditampilkan
@@ -47,7 +47,7 @@ include 'includes/header.php';
             </div>
             <div class="col-lg-6" data-aos="fade-left">
                 <div class="text-center">
-                    <img src="assets/images/trolichibor.png" alt="CHIBOR Product" class="img-fluid hover-scale" style="max-height: 500px;">
+                    <img src="assets/images/cheese.png" alt="CHIBOR Product" class="img-fluid hover-scale" style="max-height: 500px;">
                 </div>
             </div>
         </div>
@@ -59,10 +59,13 @@ include 'includes/header.php';
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6 mb-4 mb-lg-0" data-aos="fade-right">
-                <img src="assets/images/IRJ-OFFICE.png" alt="Tentang CHIBOR" class="img-fluid rounded shadow-lg">
+                <img src="assets/images/IRJ-OFFICE.png"
+                    alt="Tentang CHIBOR"
+                    class="img-fluid shadow-lg"
+                    style="width:600px; height:550px; border-radius:50%; object-fit:cover;">
             </div>
             <div class="col-lg-6" data-aos="fade-left">
-                <h2 class="section-title">Tentang <span class="gradient-text">CHIBOR</span></h2>
+                <h2 class="section-title gradient-text">PT. IRGHA REKSA JAYA</h2>
                 <p class="section-subtitle">
                     PT. IRGHA REKSA JAYA telah berdedikasi menghadirkan produk snack berkualitas tinggi sejak 12 Juli 2023.
                 </p>
@@ -97,8 +100,8 @@ include 'includes/header.php';
 <section class="section-padding">
     <div class="container">
         <div class="text-center mb-5" data-aos="fade-up">
-            <h2 class="section-title">Produk <span class="gradient-text">Unggulan</span></h2>
-            <p class="section-subtitle">Pilihan terbaik dari koleksi CHIBOR yang wajib Anda coba</p>
+            <h2 class="section-title">Produk <span class="gradient-text">Terbaru</span></h2>
+            <p class="section-subtitle">Pilihan terbaru dari koleksi CHIBOR yang wajib Anda coba</p>
         </div>
 
         <div class="row">
@@ -226,30 +229,35 @@ include 'includes/header.php';
     </section>
 <?php endif; ?>
 
-<!-- Call to Action -->
-<section class="section-padding bg-gradient text-white">
-    <div class="container text-center">
-        <div class="row justify-content-center">
-            <div class="col-lg-8" data-aos="zoom-in">
-                <h2 class="section-title text-primary mb-4">Siap Merasakan <span class="text-warning">Kelezatan CHIBOR?</span></h2>
-                <p class="section-subtitle text-dark mb-5">
-                    Jangan tunggu lagi! Pesan sekarang dan rasakan sendiri kelezatan yang bikin nagih.
-                    Dapatkan penawaran menarik untuk pembelian dalam jumlah besar.
-                </p>
-                <div class="d-flex flex-wrap justify-content-center gap-3">
+<!-- CTA Pill ala Costa Vida -->
+<section class="section-padding">
+    <div class="container">
+        <div class="cta-pill" data-aos="zoom-in">
+            <div class="cta-left">
+                <div class="cta-eyebrow">Siap Merasakan</div>
+                <h2 class="cta-title">Kelezatan CHIBOR?</h2>
+                <p class="cta-sub">Jangan tunggu lagi! Pesan sekarang dan rasakan sendiri kelezatan yang bikin nagih.
+                    Dapatkan penawaran menarik untuk pembelian dalam jumlah besar.</p>
+                <div class="cta-actions">
                     <a href="https://wa.me/6282320208899?text=Halo, saya ingin memesan produk CHIBOR"
-                        target="_blank"
-                        class="btn btn-pesan btn-lg px-5">
-                        <i class="fab fa-whatsapp me-2"></i>Pesan via WhatsApp
-                    </a>
-                    <a href="products.php" class="btn btn-outline-dark btn-lg px-5">
-                        <i class="fas fa-shopping-bag me-2"></i>Lihat Katalog
-                    </a>
+                        target="_blank" class="btn btn-hero-dark">Pesan via WhatsApp</a>
+                    <a href="products.php" class="btn btn-hero-outline-dark">Lihat Katalog</a>
                 </div>
             </div>
+
+            <form class="cta-right" onsubmit="event.preventDefault(); alert('Terima kasih! Kami akan menghubungi Anda.');">
+                <div class="pill-input">
+                    <input type="email" class="pill-field" placeholder="Masukkan email Anda" required>
+                    <button type="submit" class="pill-btn" aria-label="Kirim">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                <small class="pill-hint">Daftar untuk update promo & produk baru.</small>
+            </form>
         </div>
     </div>
 </section>
+
 
 <?php
 $extra_js = '

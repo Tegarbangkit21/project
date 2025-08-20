@@ -2,25 +2,36 @@
 // products.php
 session_start();
 require_once 'includes/db.php';
-
+require_once 'includes/functions.php';
 $page_title = 'Produk';
 
-// Ambil semua kategori
-$stmt = $pdo->query("SELECT * FROM kategori ORDER BY nama_kategori");
+/* 1) Baca kategori dari URL + whitelist */
+$selected_category = isset($_GET['category']) ? trim($_GET['category']) : '';
+$allowed = ['Retail', 'Specialties', 'Private Label'];
+if (!in_array($selected_category, $allowed, true)) {
+    // kalau kategori tidak valid, default ke kategori pertama
+    $selected_category = $allowed[0];
+}
+
+/* 2) Ambil semua kategori */
+$stmt = $pdo->query("SELECT * FROM kategori ORDER BY id ASC");
 $categories = $stmt->fetchAll();
 
-// Ambil semua produk dengan kategori dan subkategori
-$stmt = $pdo->query("SELECT p.*, k.nama_kategori, s.nama_subkategori 
-                     FROM produk p 
-                     LEFT JOIN kategori k ON p.id_kategori = k.id 
-                     LEFT JOIN subkategori s ON p.id_subkategori = s.id 
-                     ORDER BY k.nama_kategori, p.nama");
+/* 3) Ambil produk TERFILTER */
+$sql = "SELECT p.*, k.nama_kategori, s.nama_subkategori
+        FROM produk p
+        LEFT JOIN kategori k ON p.id_kategori = k.id
+        LEFT JOIN subkategori s ON p.id_subkategori = s.id
+        WHERE k.nama_kategori = :cat
+        ORDER BY k.nama_kategori, p.nama";
+
+$stmt = $pdo->prepare($sql);
+$stmt->execute([':cat' => $selected_category]);
 $products = $stmt->fetchAll();
-// Ambil 3 testimoni terbaru untuk ditampilkan
+
+/* 4) Ambil testimoni */
 $stmt_testimonials = $pdo->query("SELECT * FROM testimoni ORDER BY id DESC LIMIT 3");
 $testimonials = $stmt_testimonials->fetchAll();
-// Filter produk berdasarkan kategori jika ada
-$selected_category = isset($_GET['category']) ? $_GET['category'] : 'all';
 
 include 'includes/header.php';
 ?>
@@ -40,36 +51,34 @@ include 'includes/header.php';
 </section>
 
 <!-- Product Search & Filter -->
+<!-- Category Filter -->
+<!-- Category Tabs (tanpa "Semua Produk") -->
 <section class="section-padding bg-light">
     <div class="container">
-        <!-- Search Bar -->
+        <!-- Search Bar (biarkan seperti punya kamu) -->
         <div class="row mb-4">
             <div class="col-lg-6 mx-auto" data-aos="fade-up">
                 <div class="input-group input-group-lg">
                     <span class="input-group-text bg-primary text-white">
                         <i class="fas fa-search"></i>
                     </span>
-                    <input type="text"
-                        class="form-control"
-                        id="productSearch"
-                        placeholder="Cari produk CHIBOR..."
-                        autocomplete="off">
+                    <input type="text" class="form-control" id="productSearch"
+                        placeholder="Cari produk CHIBOR..." autocomplete="off">
                 </div>
             </div>
         </div>
 
-        <!-- Category Filter -->
-        <div class="category-filter text-center" data-aos="fade-up" data-aos-delay="100">
-            <button class="filter-btn active" data-filter="all">
-                <i class="fas fa-th-large me-2"></i>Semua Produk
-            </button>
-            <?php foreach ($categories as $category): ?>
-                <?php if ($category['nama_kategori'] !== 'Custom'): ?>
-                    <button class="filter-btn" data-filter="<?= h($category['nama_kategori']) ?>">
-                        <i class="fas fa-<?= $category['nama_kategori'] == 'Retail' ? 'shopping-basket' : 'star' ?> me-2"></i>
-                        <?= h($category['nama_kategori']) ?>
-                    </button>
-                <?php endif; ?>
+        <!-- Kategori sebagai link -->
+        <div class="category-tabs text-center" data-aos="fade-up" data-aos-delay="100">
+            <?php
+            // daftar kategori tampil
+            $displayCats = ['Retail' => 'shopping-basket', 'Specialties' => 'star', 'Private Label' => 'star'];
+            foreach ($displayCats as $catName => $icon) :
+                $active = ($selected_category === $catName) ? 'active' : '';
+            ?>
+                <a class="pill <?= $active ?>" href="products.php?category=<?= urlencode($catName) ?>">
+                    <i class="fas fa-<?= $icon ?> me-2"></i><?= htmlspecialchars($catName) ?>
+                </a>
             <?php endforeach; ?>
         </div>
     </div>
@@ -285,30 +294,28 @@ include 'includes/header.php';
 
 $extra_js = '
 <script>
+// ganti isi script kategori lama jadi hanya search:
 document.addEventListener("DOMContentLoaded", function() {
-    const searchInput = document.getElementById("productSearch");
-    const filterButtons = document.querySelectorAll(".filter-btn");
-    const productItems = document.querySelectorAll(".product-item");
-    const emptyState = document.getElementById("emptyState");
+  const searchInput = document.getElementById("productSearch");
+  const productItems = document.querySelectorAll(".product-item");
+  const emptyState = document.getElementById("emptyState");
 
-    // --- FUNGSI UNTUK FILTER KATEGORI (DIPERBAIKI) ---
-    function filterByCategory(category) {
-        let visibleCount = 0;
-        productItems.forEach(item => {
-            const itemCategory = item.getAttribute("data-category");
-            
-            // Cek apakah item ini harus ditampilkan berdasarkan kategori
-            const shouldShow = (category === "all" || itemCategory === category);
-            
-            // Gunakan classList.toggle untuk efisiensi, ini kuncinya!
-            item.classList.toggle("hidden", !shouldShow);
+  function runSearch(term){
+    let visible = 0;
+    const q = term.toLowerCase().trim();
+    productItems.forEach(item => {
+      const name = item.querySelector(".product-title")?.textContent.toLowerCase() || "";
+      const show = !q || name.includes(q);
+      item.style.display = show ? "" : "none";
+      if (show) visible++;
+    });
+    emptyState.style.display = (visible === 0) ? "block" : "none";
+  }
 
-            if (shouldShow) {
-                visibleCount++;
-            }
-        });
-        emptyState.style.display = visibleCount === 0 ? "block" : "none";
-    }
+  searchInput.addEventListener("input", () => runSearch(searchInput.value));
+  runSearch("");
+});
+
 
     // --- FUNGSI UNTUK PENCARIAN (DIPERBAIKI) ---
     function filterBySearch(searchTerm) {

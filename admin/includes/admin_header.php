@@ -204,7 +204,18 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         Dashboard
                     </a>
                 </li>
-
+                <li class="nav-item">
+                    <!-- TAMBAHKAN BARIS DI BAWAH INI -->
+                    <a href="penjualan.php" class="nav-link <?= ($current_page == 'penjualan.php') ? 'active' : '' ?>">
+                        <i class="fas fa-chart-line me-2"></i>Kelola Penjualan
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <!-- TAMBAHKAN BARIS DI BAWAH INI -->
+                    <a href="laporan.php" class="nav-link <?= ($current_page == 'laporan.php') ? 'active' : '' ?>">
+                        <i class="fas fa-file-alt me-2"></i>Laporan Penjualan
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a href="products.php" class="nav-link <?= in_array($current_page, ['products.php', 'add_product.php', 'edit_product.php']) ? 'active' : '' ?>">
                         <i class="fas fa-box"></i>

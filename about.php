@@ -2,7 +2,7 @@
 // about.php
 session_start();
 require_once 'includes/db.php';
-
+require_once 'includes/functions.php';
 $page_title = 'Tentang Kami';
 include 'includes/header.php';
 ?>
@@ -230,9 +230,7 @@ include 'includes/header.php';
                             </div>
                             <h5 class="fw-bold">Alamat Kantor</h5>
                             <p class="text-muted mb-0">
-                                Jl. Industri No. 123<br>
-                                Jakarta Timur, DKI Jakarta<br>
-                                Indonesia 13750
+                                Kencana Green Residence Blok M9, Kota BOGOR<br>
                             </p>
                         </div>
                     </div>
@@ -243,12 +241,12 @@ include 'includes/header.php';
                             </div>
                             <h5 class="fw-bold">Kontak</h5>
                             <p class="text-muted mb-2">
-                                <strong>Telepon:</strong><br>
-                                <a href="tel:+6282320208899" class="text-decoration-none">0823-2020-8899</a>
+                                <strong>Telepon Kantor:</strong><br>
+                                <a href="tel:0251 2028717" class="text-decoration-none">0251 2028717</a>
                             </p>
                             <p class="text-muted mb-0">
                                 <strong>Email:</strong><br>
-                                <a href="mailto:info@chibor.com" class="text-decoration-none">info@chibor.com</a>
+                                <a href="mailto:info@irghareksajaya.com" class="text-decoration-none">info@irghareksajaya.com</a>
                             </p>
                         </div>
                     </div>

@@ -2,7 +2,7 @@
 // admin/login.php
 session_start();
 require_once '../includes/db.php';
-
+require_once '../includes/functions.php';
 // Redirect if already logged in
 if (isLoggedIn()) {
     redirect('dashboard.php');
