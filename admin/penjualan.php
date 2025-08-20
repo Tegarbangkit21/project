@@ -224,13 +224,13 @@ include 'includes/admin_header.php';
 
                         <div class="mb-3">
                             <label for="nama_customer" class="form-label">Nama Customer</label>
-                            <input type="text" class="form-control" id="nama_customer" name="nama_customer" placeholder="cth: Toko Sembako Jaya" required>
+                            <input type="text" class="form-control" id="nama_customer" name="nama_customer" placeholder="cth: ranch market" required>
                         </div>
 
                         <!-- Tipe Customer -->
                         <div class="mb-3">
                             <label for="type_customer" class="form-label">Tipe Customer</label>
-                            <input type="text" class="form-control" id="type_customer" name="type_customer" placeholder="cth: Retail / Spesial / dll" required>
+                            <input type="text" class="form-control" id="type_customer" name="type_customer" placeholder="cth: Distributor/ Supermarket/ Perorangan" required>
                         </div>
 
                         <div class="mb-3">

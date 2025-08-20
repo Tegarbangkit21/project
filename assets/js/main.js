@@ -358,10 +358,3 @@ function hideLoading() {
     }
 }
 
-function sendToWhatsApp() {
-    const email = document.getElementById('emailField').value;
-    const phone = '6285782852029'; // Ganti dengan nomor WhatsApp kamu (pakai kode negara, tanpa +)
-    const message = `Halo! Saya ingin mendaftar dengan email: ${email}`;
-    const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank'); // Buka WhatsApp di tab baru
-}

@@ -239,21 +239,19 @@ include 'includes/header.php';
                 <p class="cta-sub">Jangan tunggu lagi! Pesan sekarang dan rasakan sendiri kelezatan yang bikin nagih.
                     Dapatkan penawaran menarik untuk pembelian dalam jumlah besar.</p>
                 <div class="cta-actions">
-                    <a href="https://wa.me/6282320208899?text=Halo, saya ingin memesan produk CHIBOR"
-                        target="_blank" class="btn btn-hero-dark">Pesan via WhatsApp</a>
                     <a href="products.php" class="btn btn-hero-outline-dark">Lihat Katalog</a>
                 </div>
             </div>
-
-            <form class="cta-right" onsubmit="event.preventDefault(); alert('Terima kasih! Kami akan menghubungi Anda.');">
+            <div class="cta-right">
                 <div class="pill-input">
-                    <input type="email" class="pill-field" placeholder="Masukkan email Anda" required>
-                    <button type="submit" class="pill-btn" aria-label="Kirim">
-                        <i class="fas fa-arrow-right"></i>
+                    <input type="text" class="pill-field" value="Chat via WhatsApp" readonly>
+                    <button type="button" class="pill-btn" aria-label="WhatsApp"
+                        onclick="window.open('https://wa.me/6282320208899?text=Halo%20saya%20ingin%20tahu%20produk%20Anda', '_blank')">
+                        <i class="fab fa-whatsapp"></i>
                     </button>
                 </div>
-                <small class="pill-hint">Daftar untuk update promo & produk baru.</small>
-            </form>
+                <small class="pill-hint">Klik untuk chat langsung via WhatsApp.</small>
+            </div>
         </div>
     </div>
 </section>
