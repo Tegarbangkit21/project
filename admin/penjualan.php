@@ -9,6 +9,20 @@ $success_message = '';
 $error_message   = '';
 
 // -------------------------------
+// Helper: pertahankan query string (untuk per_page & export)
+// -------------------------------
+if (!function_exists('keepQuery')) {
+    function keepQuery(array $extra = []): string
+    {
+        $qs = $_GET;
+        // biasanya page & per_page tidak kita bawa saat ubah per_page
+        unset($qs['page'], $qs['per_page']);
+        $qs = array_merge($qs, $extra);
+        return http_build_query($qs);
+    }
+}
+
+// -------------------------------
 // Handle actions: create/update/delete
 // -------------------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -18,15 +32,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id_produk         = (int)($_POST['id_produk'] ?? 0);
         $nama_customer     = trim($_POST['nama_customer'] ?? '');
         $type_customer     = trim($_POST['type_customer'] ?? '');
+        $area_customer     = trim($_POST['area_customer'] ?? '');
         $jumlah_terjual    = (int)($_POST['jumlah_terjual'] ?? 0);
         $tanggal_penjualan = trim($_POST['tanggal_penjualan'] ?? '');
 
-        if ($id_produk <= 0 || $jumlah_terjual <= 0 || $tanggal_penjualan === '' || $nama_customer === '' || $type_customer === '') {
+        if (
+            $id_produk <= 0 || $jumlah_terjual <= 0 || $tanggal_penjualan === '' ||
+            $nama_customer === '' || $type_customer === '' || $area_customer === ''
+        ) {
             $error_message = 'Semua field harus diisi dengan benar.';
         } else {
             try {
-                $stmt = $pdo->prepare("\n                    INSERT INTO penjualan (id_produk, nama_customer, type_customer, jumlah_terjual, tanggal_penjualan)\n                    VALUES (?, ?, ?, ?, ?)\n                ");
-                $stmt->execute([$id_produk, $nama_customer, $type_customer, $jumlah_terjual, $tanggal_penjualan]);
+                $stmt = $pdo->prepare("
+                    INSERT INTO penjualan (id_produk, nama_customer, type_customer, area_customer, jumlah_terjual, tanggal_penjualan)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                ");
+                $stmt->execute([$id_produk, $nama_customer, $type_customer, $area_customer, $jumlah_terjual, $tanggal_penjualan]);
                 $success_message = 'Data penjualan berhasil ditambahkan.';
             } catch (PDOException $e) {
                 $error_message = 'Database error: ' . $e->getMessage();
@@ -39,18 +60,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id_produk         = (int)($_POST['id_produk'] ?? 0);
         $nama_customer     = trim($_POST['nama_customer'] ?? '');
         $type_customer     = trim($_POST['type_customer'] ?? '');
+        $area_customer     = trim($_POST['area_customer'] ?? '');
         $jumlah_terjual    = (int)($_POST['jumlah_terjual'] ?? 0);
         $tanggal_penjualan = trim($_POST['tanggal_penjualan'] ?? '');
 
-        if ($id <= 0 || $id_produk <= 0 || $jumlah_terjual <= 0 || $tanggal_penjualan === '' || $nama_customer === '' || $type_customer === '') {
+        if (
+            $id <= 0 || $id_produk <= 0 || $jumlah_terjual <= 0 || $tanggal_penjualan === '' ||
+            $nama_customer === '' || $type_customer === '' || $area_customer === ''
+        ) {
             $error_message = 'Semua field harus diisi dengan benar.';
         } else {
             try {
-                $stmt = $pdo->prepare("\n                    UPDATE penjualan\n                       SET id_produk = :id_produk,\n                           nama_customer = :nama_customer,\n                           type_customer = :type_customer,\n                           jumlah_terjual = :jumlah,\n                           tanggal_penjualan = :tanggal\n                     WHERE id = :id\n                ");
+                $stmt = $pdo->prepare("
+                    UPDATE penjualan
+                       SET id_produk = :id_produk,
+                           nama_customer = :nama_customer,
+                           type_customer = :type_customer,
+                           area_customer = :area_customer,
+                           jumlah_terjual = :jumlah,
+                           tanggal_penjualan = :tanggal
+                     WHERE id = :id
+                ");
                 $stmt->execute([
                     ':id_produk'     => $id_produk,
                     ':nama_customer' => $nama_customer,
                     ':type_customer' => $type_customer,
+                    ':area_customer' => $area_customer,
                     ':jumlah'        => $jumlah_terjual,
                     ':tanggal'       => $tanggal_penjualan,
                     ':id'            => $id
@@ -79,17 +114,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // -------------------------------
-// Dropdown produk + kategori & subkategori (untuk form & autofill)
+// FILTER INPUT (GET) + opsi dropdown
 // -------------------------------
-$products = $pdo->query("\n    SELECT p.id, p.nama,\n           k.nama_kategori AS kategori,\n           s.nama_subkategori AS subkategori\n    FROM produk p\n    LEFT JOIN kategori k    ON p.id_kategori = k.id\n    LEFT JOIN subkategori s ON p.id_subkategori = s.id\n    ORDER BY p.nama ASC\n")->fetchAll(PDO::FETCH_ASSOC);
+$q          = trim($_GET['q'] ?? '');
+$start_date = trim($_GET['start_date'] ?? '');
+$end_date   = trim($_GET['end_date'] ?? '');
+$fkategori  = trim($_GET['kategori'] ?? '');
+$fsubkat    = trim($_GET['subkategori'] ?? '');
+$fproduk    = (int)($_GET['id_produk'] ?? 0);
+$ftype      = trim($_GET['type_customer'] ?? '');
+$farea      = trim($_GET['area_customer'] ?? '');
 
-// Distinct opsi filter
-$kategori_opts = $pdo->query("SELECT DISTINCT k.nama_kategori AS kategori FROM produk p LEFT JOIN kategori k ON p.id_kategori=k.id WHERE k.nama_kategori IS NOT NULL ORDER BY k.nama_kategori")->fetchAll(PDO::FETCH_COLUMN);
-$subkat_opts   = $pdo->query("SELECT DISTINCT s.nama_subkategori AS subkategori FROM produk p LEFT JOIN subkategori s ON p.id_subkategori=s.id WHERE s.nama_subkategori IS NOT NULL ORDER BY s.nama_subkategori")->fetchAll(PDO::FETCH_COLUMN);
+// Dropdown produk + kategori & subkategori (untuk form & autofill)
+$products = $pdo->query("
+    SELECT p.id, p.nama,
+           k.nama_kategori AS kategori,
+           s.nama_subkategori AS subkategori
+    FROM produk p
+    LEFT JOIN kategori k    ON p.id_kategori = k.id
+    LEFT JOIN subkategori s ON p.id_subkategori = s.id
+    ORDER BY p.nama ASC
+")->fetchAll(PDO::FETCH_ASSOC);
+
+// Opsi filter (distinct)
+$kategori_opts = $pdo->query("SELECT DISTINCT nama_kategori FROM kategori WHERE nama_kategori IS NOT NULL ORDER BY nama_kategori")->fetchAll(PDO::FETCH_COLUMN);
+$subkat_opts   = $pdo->query("SELECT DISTINCT nama_subkategori FROM subkategori WHERE nama_subkategori IS NOT NULL ORDER BY nama_subkategori")->fetchAll(PDO::FETCH_COLUMN);
 $produk_opts   = $pdo->query("SELECT id, nama FROM produk ORDER BY nama")->fetchAll(PDO::FETCH_ASSOC);
-$type_opts     = $pdo->query("SELECT DISTINCT type_customer FROM penjualan WHERE type_customer IS NOT NULL AND type_customer<>'' ORDER BY type_customer")->fetchAll(PDO::FETCH_COLUMN);
+$type_opts     = $pdo->query("SELECT DISTINCT type_customer FROM penjualan WHERE type_customer <> '' ORDER BY type_customer")->fetchAll(PDO::FETCH_COLUMN);
+$area_opts     = $pdo->query("SELECT DISTINCT area_customer FROM penjualan WHERE area_customer <> '' ORDER BY area_customer")->fetchAll(PDO::FETCH_COLUMN);
 
-// Peta untuk JS autofill
+// Peta untuk JS autofill kategori/subkategori
 $productMap = [];
 foreach ($products as $pr) {
     $productMap[(int)$pr['id']] = [
@@ -99,47 +153,51 @@ foreach ($products as $pr) {
 }
 
 // -------------------------------
-// Filters & Search (GET)
+// WHERE dinamis utk filter
 // -------------------------------
-$q           = trim($_GET['q'] ?? '');
-$start_date  = trim($_GET['start_date'] ?? ''); // YYYY-MM-DD
-$end_date    = trim($_GET['end_date'] ?? '');   // YYYY-MM-DD
-$fkategori   = trim($_GET['kategori'] ?? '');
-$fsubkat     = trim($_GET['subkategori'] ?? '');
-$fproduk     = (int)($_GET['id_produk'] ?? 0);
-$ftype       = trim($_GET['type_customer'] ?? '');
-
-$where = [];
+$where  = [];
 $params = [];
 
 if ($q !== '') {
-    // cari bebas di banyak kolom, termasuk tanggal sebagai string
-    $where[] = "(\n        pj.nama_customer LIKE :q OR\n        pj.type_customer LIKE :q OR\n        p.nama LIKE :q OR\n        k.nama_kategori LIKE :q OR\n        s.nama_subkategori LIKE :q OR\n        DATE_FORMAT(pj.tanggal_penjualan, '%Y-%m-%d') LIKE :q OR\n        DATE_FORMAT(pj.tanggal_penjualan, '%d-%m-%Y') LIKE :q\n    )";
+    $where[] = "("
+        . " pj.nama_customer LIKE :q OR"
+        . " pj.type_customer LIKE :q OR"
+        . " pj.area_customer LIKE :q OR"
+        . " p.nama LIKE :q OR"
+        . " k.nama_kategori LIKE :q OR"
+        . " s.nama_subkategori LIKE :q OR"
+        . " DATE_FORMAT(pj.tanggal_penjualan, '%Y-%m-%d') LIKE :q OR"
+        . " DATE_FORMAT(pj.tanggal_penjualan, '%d-%m-%Y') LIKE :q"
+        . ")";
     $params[':q'] = "%{$q}%";
 }
 if ($start_date !== '') {
     $where[] = 'pj.tanggal_penjualan >= :start_date';
     $params[':start_date'] = $start_date;
 }
-if ($end_date !== '') {
+if ($end_date   !== '') {
     $where[] = 'pj.tanggal_penjualan <= :end_date';
-    $params[':end_date'] = $end_date;
+    $params[':end_date']   = $end_date;
 }
-if ($fkategori !== '') {
+if ($fkategori  !== '') {
     $where[] = 'k.nama_kategori = :fkategori';
-    $params[':fkategori'] = $fkategori;
+    $params[':fkategori']  = $fkategori;
 }
-if ($fsubkat !== '') {
+if ($fsubkat    !== '') {
     $where[] = 's.nama_subkategori = :fsubkat';
-    $params[':fsubkat'] = $fsubkat;
+    $params[':fsubkat']    = $fsubkat;
 }
-if ($fproduk > 0) {
+if ($fproduk      > 0) {
     $where[] = 'p.id = :fproduk';
-    $params[':fproduk'] = $fproduk;
+    $params[':fproduk']    = $fproduk;
 }
-if ($ftype !== '') {
+if ($ftype     !== '') {
     $where[] = 'pj.type_customer = :ftype';
-    $params[':ftype'] = $ftype;
+    $params[':ftype']      = $ftype;
+}
+if ($farea     !== '') {
+    $where[] = 'pj.area_customer = :farea';
+    $params[':farea']      = $farea;
 }
 
 $whereSQL = $where ? ('WHERE ' . implode(' AND ', $where)) : '';
@@ -154,19 +212,39 @@ if (!in_array($per_page, $allowed_page_sizes, true)) $per_page = 10;
 $page = max(1, (int)($_GET['page'] ?? 1));
 
 // Total rows (ikut filter)
-$sql_count = "SELECT COUNT(*)\n             FROM penjualan pj\n             JOIN produk p      ON pj.id_produk = p.id\n             LEFT JOIN kategori k    ON p.id_kategori = k.id\n             LEFT JOIN subkategori s ON p.id_subkategori = s.id\n             $whereSQL";
-$stmt = $pdo->prepare($sql_count);
-$stmt->execute($params);
-$total_rows = (int)$stmt->fetchColumn();
+$sqlCount = "
+    SELECT COUNT(*)
+    FROM penjualan pj
+    JOIN produk p      ON pj.id_produk = p.id
+    LEFT JOIN kategori k    ON p.id_kategori = k.id
+    LEFT JOIN subkategori s ON p.id_subkategori = s.id
+    $whereSQL
+";
+$stmtCount = $pdo->prepare($sqlCount);
+$stmtCount->execute($params);
+$total_rows = (int)$stmtCount->fetchColumn();
 
 $total_pages = max(1, (int)ceil($total_rows / $per_page));
 if ($page > $total_pages) $page = $total_pages;
 
 $offset = ($page - 1) * $per_page;
 
-// Data page ini (ikutkan kolom customer + join kategori/subkategori untuk tampilan)
-$sql_page = "\n    SELECT pj.id, pj.jumlah_terjual, pj.tanggal_penjualan,\n           pj.nama_customer, pj.type_customer,\n           p.id AS id_produk, p.nama AS nama_produk,\n           k.nama_kategori AS kategori,\n           s.nama_subkategori AS subkategori\n    FROM penjualan pj\n    JOIN produk p      ON pj.id_produk = p.id\n    LEFT JOIN kategori k    ON p.id_kategori = k.id\n    LEFT JOIN subkategori s ON p.id_subkategori = s.id\n    $whereSQL\n    ORDER BY pj.tanggal_penjualan DESC, pj.id DESC\n    LIMIT :limit OFFSET :offset\n";
-$stmt = $pdo->prepare($sql_page);
+// Data page ini (ikut filter)
+$sqlPage = "
+    SELECT pj.id, pj.jumlah_terjual, pj.tanggal_penjualan,
+           pj.nama_customer, pj.type_customer, pj.area_customer,
+           p.id AS id_produk, p.nama AS nama_produk,
+           k.nama_kategori AS kategori,
+           s.nama_subkategori AS subkategori
+    FROM penjualan pj
+    JOIN produk p      ON pj.id_produk = p.id
+    LEFT JOIN kategori k    ON p.id_kategori = k.id
+    LEFT JOIN subkategori s ON p.id_subkategori = s.id
+    $whereSQL
+    ORDER BY pj.tanggal_penjualan DESC, pj.id DESC
+    LIMIT :limit OFFSET :offset
+";
+$stmt = $pdo->prepare($sqlPage);
 foreach ($params as $k => $v) {
     $stmt->bindValue($k, $v);
 }
@@ -174,17 +252,6 @@ $stmt->bindValue(':limit',  $per_page, PDO::PARAM_INT);
 $stmt->bindValue(':offset', $offset,   PDO::PARAM_INT);
 $stmt->execute();
 $sales_page = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Helper untuk rebuild query string (mempertahankan filter saat ganti page / download)
-function keepQuery(array $extra = [])
-{
-    $qs = $_GET;
-    foreach ($extra as $k => $v) {
-        if ($v === null) unset($qs[$k]);
-        else $qs[$k] = $v;
-    }
-    return http_build_query($qs);
-}
 
 $page_title = 'Kelola Penjualan';
 include 'includes/admin_header.php';
@@ -210,9 +277,8 @@ include 'includes/admin_header.php';
         </div>
     <?php endif; ?>
 
-
-    <!-- Form Input Penjualan -->
     <div class="row g-4">
+        <!-- Form Input Penjualan -->
         <div class="col-lg-4">
             <div class="card">
                 <div class="card-header">
@@ -223,14 +289,24 @@ include 'includes/admin_header.php';
                         <input type="hidden" name="action" value="create">
 
                         <div class="mb-3">
-                            <label for="nama_customer" class="form-label">Nama Customer</label>
-                            <input type="text" class="form-control" id="nama_customer" name="nama_customer" placeholder="cth: ranch market" required>
+                            <label for="nama_customer" class="form-label">
+                                Nama Customer <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="nama_customer" name="nama_customer" placeholder="cth: Toko Sembako Jaya" required>
                         </div>
 
-                        <!-- Tipe Customer -->
                         <div class="mb-3">
-                            <label for="type_customer" class="form-label">Tipe Customer</label>
-                            <input type="text" class="form-control" id="type_customer" name="type_customer" placeholder="cth: Distributor/ Supermarket/ Perorangan" required>
+                            <label for="type_customer" class="form-label">
+                                Tipe Customer <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="type_customer" name="type_customer" placeholder="cth: Retail / Spesial / dll" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="area_customer" class="form-label">
+                                Area Customer <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="area_customer" name="area_customer" placeholder="cth: Bogor Barat / Kota Bogor" required>
                         </div>
 
                         <div class="mb-3">
@@ -238,14 +314,11 @@ include 'includes/admin_header.php';
                             <select class="form-select" id="id_produk" name="id_produk" required>
                                 <option value="">-- Pilih Produk --</option>
                                 <?php foreach ($products as $product): ?>
-                                    <option value="<?= (int)$product['id'] ?>">
-                                        <?= h($product['nama']) ?>
-                                    </option>
+                                    <option value="<?= (int)$product['id'] ?>"><?= h($product['nama']) ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
 
-                        <!-- Kategori/Subkategori otomatis -->
                         <div class="mb-3">
                             <label class="form-label">Kategori</label>
                             <input type="text" class="form-control" id="kategori_auto" value="" readonly>
@@ -281,7 +354,7 @@ include 'includes/admin_header.php';
                     <form method="GET" id="filterForm" class="row g-2 align-items-end">
                         <div class="col-md-4">
                             <label class="form-label">Kata kunci</label>
-                            <input type="text" name="q" value="<?= h($q) ?>" class="form-control" placeholder="cari: tanggal/nama/tipe/produk/kategori/...">
+                            <input type="text" name="q" value="<?= h($q) ?>" class="form-control" placeholder="cari: tanggal/nama/tipe/produk/kategori/area">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Tanggal Mulai</label>
@@ -291,12 +364,13 @@ include 'includes/admin_header.php';
                             <label class="form-label">Tanggal Selesai</label>
                             <input type="date" name="end_date" value="<?= h($end_date) ?>" class="form-control">
                         </div>
+
                         <div class="col-md-3">
                             <label class="form-label">Kategori</label>
                             <select name="kategori" class="form-select">
                                 <option value="">Semua</option>
                                 <?php foreach ($kategori_opts as $opt): ?>
-                                    <option value="<?= h($opt) ?>" <?= $fkategori === $opt ? 'selected' : ''; ?>><?= h($opt) ?></option>
+                                    <option value="<?= h($opt) ?>" <?= $fkategori === $opt ? 'selected' : '' ?>><?= h($opt) ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -305,7 +379,7 @@ include 'includes/admin_header.php';
                             <select name="subkategori" class="form-select">
                                 <option value="">Semua</option>
                                 <?php foreach ($subkat_opts as $opt): ?>
-                                    <option value="<?= h($opt) ?>" <?= $fsubkat === $opt ? 'selected' : ''; ?>><?= h($opt) ?></option>
+                                    <option value="<?= h($opt) ?>" <?= $fsubkat === $opt ? 'selected' : '' ?>><?= h($opt) ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -314,7 +388,7 @@ include 'includes/admin_header.php';
                             <select name="id_produk" class="form-select">
                                 <option value="0">Semua</option>
                                 <?php foreach ($produk_opts as $opt): ?>
-                                    <option value="<?= (int)$opt['id'] ?>" <?= $fproduk === (int)$opt['id'] ? 'selected' : ''; ?>><?= h($opt['nama']) ?></option>
+                                    <option value="<?= (int)$opt['id'] ?>" <?= $fproduk === (int)$opt['id'] ? 'selected' : '' ?>><?= h($opt['nama']) ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -323,26 +397,36 @@ include 'includes/admin_header.php';
                             <select name="type_customer" class="form-select">
                                 <option value="">Semua</option>
                                 <?php foreach ($type_opts as $opt): ?>
-                                    <option value="<?= h($opt) ?>" <?= $ftype === $opt ? 'selected' : ''; ?>><?= h($opt) ?></option>
+                                    <option value="<?= h($opt) ?>" <?= $ftype === $opt ? 'selected' : '' ?>><?= h($opt) ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label">Area</label>
+                            <select name="area_customer" class="form-select">
+                                <option value="">Semua</option>
+                                <?php foreach ($area_opts as $opt): ?>
+                                    <option value="<?= h($opt) ?>" <?= $farea === $opt ? 'selected' : '' ?>><?= h($opt) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
                         <div class="col-12 d-flex gap-2 mt-1">
                             <input type="hidden" name="page" value="1">
                             <button class="btn btn-primary"><i class="fas fa-filter me-2"></i>Terapkan</button>
                             <a class="btn btn-outline-secondary" href="penjualan.php"><i class="fas fa-undo me-2"></i>Reset</a>
 
-                            <?php // tombol download sesuai tampilan (file baru)
-                            $dl_qs = keepQuery();
-                            ?>
+                            <?php $dl_qs = keepQuery(); ?>
                             <a class="btn btn-success ms-auto" href="penjualan_export_view.php?<?= $dl_qs ?>">
-                                <i class="fas fa-file-download me-2"></i>Download csv
+                                <i class="fas fa-file-download me-2"></i>Download CSV
                             </a>
                         </div>
                     </form>
                 </div>
             </div>
 
+            <!-- Tabel -->
             <div class="col-12">
                 <div class="card">
                     <div class="card-header d-flex align-items-center justify-content-between">
@@ -351,13 +435,17 @@ include 'includes/admin_header.php';
                             <label class="small me-2">Tampil</label>
                             <select name="per_page" class="form-select form-select-sm" onchange="this.form.submit()">
                                 <?php foreach ($allowed_page_sizes as $s): ?>
-                                    <option value="<?= $s ?>" <?= $s === $per_page ? 'selected' : ''; ?>><?= $s ?></option>
+                                    <option value="<?= $s ?>" <?= $s === $per_page ? 'selected' : '' ?>><?= $s ?></option>
                                 <?php endforeach; ?>
                             </select>
                             <span class="small ms-2">baris / halaman</span>
-                            <?php // pertahankan filter saat ubah per_page 
+
+                            <?php
+                            // bawa semua filter saat ubah per_page
+                            foreach (['q', 'start_date', 'end_date', 'kategori', 'subkategori', 'id_produk', 'type_customer', 'area_customer'] as $k) {
+                                echo '<input type="hidden" name="' . h($k) . '" value="' . h($_GET[$k] ?? '') . '">';
+                            }
                             ?>
-                            <input type="hidden" name="<?= htmlspecialchars(keepQuery(['per_page' => null, 'page' => null])) ?>" value="">
                             <input type="hidden" name="page" value="1">
                         </form>
                     </div>
@@ -369,6 +457,7 @@ include 'includes/admin_header.php';
                                         <th style="width:120px;">Tanggal</th>
                                         <th>Nama Customer</th>
                                         <th>Tipe</th>
+                                        <th>Area</th>
                                         <th>Produk</th>
                                         <th class="d-none d-lg-table-cell">Kategori</th>
                                         <th class="d-none d-lg-table-cell">Subkategori</th>
@@ -379,7 +468,7 @@ include 'includes/admin_header.php';
                                 <tbody>
                                     <?php if (empty($sales_page)): ?>
                                         <tr>
-                                            <td colspan="8" class="text-center text-muted">Tidak ada data dengan filter saat ini.</td>
+                                            <td colspan="9" class="text-center text-muted">Tidak ada data dengan filter saat ini.</td>
                                         </tr>
                                     <?php else: ?>
                                         <?php foreach ($sales_page as $row): ?>
@@ -387,13 +476,14 @@ include 'includes/admin_header.php';
                                                 <td><?= date('d M Y', strtotime($row['tanggal_penjualan'])) ?></td>
                                                 <td><?= h($row['nama_customer'] ?? '-') ?></td>
                                                 <td><?= h($row['type_customer'] ?? '-') ?></td>
+                                                <td><?= h($row['area_customer'] ?? '-') ?></td>
                                                 <td><?= h($row['nama_produk']) ?></td>
                                                 <td class="d-none d-lg-table-cell"><?= h($row['kategori'] ?? '-') ?></td>
                                                 <td class="d-none d-lg-table-cell"><?= h($row['subkategori'] ?? '-') ?></td>
                                                 <td class="text-end"><?= number_format((int)$row['jumlah_terjual']) ?></td>
                                                 <td class="text-center">
-                                                    <!-- Edit: buka modal -->
                                                     <button
+                                                        type="button"
                                                         class="btn btn-sm btn-outline-primary me-1"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#editModal"
@@ -401,12 +491,12 @@ include 'includes/admin_header.php';
                                                         data-id_produk="<?= (int)$row['id_produk'] ?>"
                                                         data-nama_customer="<?= h($row['nama_customer'] ?? '') ?>"
                                                         data-type_customer="<?= h($row['type_customer'] ?? '') ?>"
+                                                        data-area_customer="<?= h($row['area_customer'] ?? '') ?>"
                                                         data-jumlah="<?= (int)$row['jumlah_terjual'] ?>"
                                                         data-tanggal="<?= h($row['tanggal_penjualan']) ?>">
                                                         <i class="fas fa-edit"></i>
                                                     </button>
 
-                                                    <!-- Delete: submit form -->
                                                     <form method="POST" class="d-inline" onsubmit="return confirm('Hapus data ini?');">
                                                         <input type="hidden" name="action" value="delete">
                                                         <input type="hidden" name="id" value="<?= (int)$row['id'] ?>">
@@ -422,26 +512,22 @@ include 'includes/admin_header.php';
                             </table>
                         </div>
 
-                        <!-- Pagination (angka + prev/next) -->
+                        <!-- Pagination -->
                         <?php if ($total_pages > 1): ?>
                             <nav aria-label="Pagination" class="mt-2">
                                 <ul class="pagination pagination-sm justify-content-end mb-1">
                                     <?php
-                                    // helper link
-                                    function pageLink($p, $per_page)
-                                    {
-                                        $base = 'penjualan.php?';
-                                        $qs = keepQuery(['page' => $p, 'per_page' => $per_page]);
-                                        return $base . $qs;
-                                    }
                                     $window = 2;
+                                    $pageLink = function ($p, $per) {
+                                        // bawa filter saat pindah halaman
+                                        $qs = $_GET;
+                                        $qs['page'] = (int)$p;
+                                        $qs['per_page'] = (int)$per;
+                                        return '?' . http_build_query($qs);
+                                    };
                                     ?>
-
-                                    <!-- Prev -->
                                     <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
-                                        <a class="page-link" href="<?= $page <= 1 ? '#' : pageLink($page - 1, $per_page) ?>">
-                                            &laquo; <span class="d-none d-sm-inline">Sebelumnya</span>
-                                        </a>
+                                        <a class="page-link" href="<?= $page <= 1 ? '#' : $pageLink($page - 1, $per_page) ?>">&laquo; <span class="d-none d-sm-inline">Sebelumnya</span></a>
                                     </li>
 
                                     <?php
@@ -449,26 +535,22 @@ include 'includes/admin_header.php';
                                     $end   = min($total_pages, $page + $window);
 
                                     if ($start > 1) {
-                                        echo '<li class="page-item"><a class="page-link" href="' . pageLink(1, $per_page) . '">1</a></li>';
+                                        echo '<li class="page-item"><a class="page-link" href="' . $pageLink(1, $per_page) . '">1</a></li>';
                                         if ($start > 2) echo '<li class="page-item disabled"><span class="page-link">…</span></li>';
                                     }
 
                                     for ($i = $start; $i <= $end; $i++) {
                                         $active = $i === $page ? ' active' : '';
-                                        echo '<li class="page-item' . $active . '"><a class="page-link" href="' . pageLink($i, $per_page) . '">' . $i . '</a></li>';
+                                        echo '<li class="page-item' . $active . '"><a class="page-link" href="' . $pageLink($i, $per_page) . '">' . $i . '</a></li>';
                                     }
 
                                     if ($end < $total_pages) {
                                         if ($end < $total_pages - 1) echo '<li class="page-item disabled"><span class="page-link">…</span></li>';
-                                        echo '<li class="page-item"><a class="page-link" href="' . pageLink($total_pages, $per_page) . '">' . $total_pages . '</a></li>';
+                                        echo '<li class="page-item"><a class="page-link" href="' . $pageLink($total_pages, $per_page) . '">' . $total_pages . '</a></li>';
                                     }
                                     ?>
-
-                                    <!-- Next -->
                                     <li class="page-item <?= $page >= $total_pages ? 'disabled' : '' ?>">
-                                        <a class="page-link" href="<?= $page >= $total_pages ? '#' : pageLink($page + 1, $per_page) ?>">
-                                            <span class="d-none d-sm-inline">Berikutnya</span> &raquo;
-                                        </a>
+                                        <a class="page-link" href="<?= $page >= $total_pages ? '#' : $pageLink($page + 1, $per_page) ?>"><span class="d-none d-sm-inline">Berikutnya</span> &raquo;</a>
                                     </li>
                                 </ul>
                             </nav>
@@ -495,15 +577,17 @@ include 'includes/admin_header.php';
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">Nama Customer</label>
+                        <label class="form-label">Nama Customer <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="nama_customer" id="edit-nama-customer" required>
                     </div>
-                    <!-- Tipe Customer -->
                     <div class="mb-3">
-                        <label class="form-label">Tipe Customer</label>
+                        <label class="form-label">Tipe Customer <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="type_customer" id="edit-type-customer" required>
                     </div>
-
+                    <div class="mb-3">
+                        <label class="form-label">Area Customer <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="area_customer" id="edit-area-customer" required>
+                    </div>
                     <div class="mb-3">
                         <label class="form-label">Produk</label>
                         <select class="form-select" name="id_produk" id="edit-id-produk" required>
@@ -512,7 +596,6 @@ include 'includes/admin_header.php';
                             <?php endforeach; ?>
                         </select>
                     </div>
-
                     <div class="mb-3">
                         <label class="form-label">Jumlah Terjual (Unit)</label>
                         <input type="number" class="form-control" name="jumlah_terjual" id="edit-jumlah" min="1" required>
@@ -535,7 +618,6 @@ include 'includes/admin_header.php';
         const PRODUCTS = <?= json_encode($productMap, JSON_UNESCAPED_UNICODE) ?>;
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Autofill kategori/subkategori (form create)
             const selProduk = document.getElementById('id_produk');
             const inKat = document.getElementById('kategori_auto');
             const inSubkat = document.getElementById('subkategori_auto');
@@ -561,16 +643,9 @@ include 'includes/admin_header.php';
                 document.getElementById('edit-id-produk').value = btn.getAttribute('data-id_produk');
                 document.getElementById('edit-nama-customer').value = btn.getAttribute('data-nama_customer') || '';
                 document.getElementById('edit-type-customer').value = btn.getAttribute('data-type_customer') || '';
+                document.getElementById('edit-area-customer').value = btn.getAttribute('data-area_customer') || '';
                 document.getElementById('edit-jumlah').value = btn.getAttribute('data-jumlah');
                 document.getElementById('edit-tanggal').value = btn.getAttribute('data-tanggal');
-            });
-
-            // Submit otomatis saat Enter di input keyword
-            const filterForm = document.getElementById('filterForm');
-            filterForm.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    filterForm.submit();
-                }
             });
         });
     </script>

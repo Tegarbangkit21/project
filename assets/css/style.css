@@ -391,7 +391,70 @@ body {
     transform: translateY(-2px);
     color: white;
 }
+/* ==== PRODUCT SHOWCASE CARDS ==== */
+.products-showcase { padding: 48px 0 64px; }
 
+.prod-card {
+  position: relative;
+  height: 420px;                    /* tinggi kartu */
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: var(--shadow-medium);
+  background: var(--gradient-silver);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.prod-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-heavy); }
+
+/* layer foto */
+.prod-card .photo {
+  position: absolute; inset: 0;
+  background: center/cover no-repeat;
+  filter: saturate(105%);
+}
+
+/* bubble judul setengah-lingkaran */
+.prod-card .bubble {
+  position: absolute;
+  top: 22px; left: 22px;
+  max-width: 60%;
+  padding: 28px 24px;
+  border-radius: 28px 120px 120px 28px;  /* bentuk unik (beda dari referensi) */
+  color: #1b2b22;
+  line-height: 1.15;
+  box-shadow: var(--shadow-light);
+}
+.bubble h3{
+  font-weight: 800; letter-spacing:.2px; margin:0; font-size: clamp(1.2rem, 2.6vw, 2rem);
+}
+.bubble p{ margin:.35rem 0 0; opacity:.9; font-weight:600; }
+
+/* tombol pill */
+.prod-card .cta {
+  position: absolute; bottom: 24px; left: 24px;
+  border: 0; padding: 14px 22px;
+  border-radius: 999px;
+  font-weight: 700; letter-spacing: .08em;
+  background: rgba(255,255,255,.85);
+  backdrop-filter: blur(4px);
+  color: #1a1a1a;
+  box-shadow: var(--shadow-light);
+  text-transform: uppercase;
+}
+.prod-card .cta:hover { background: #fff; }
+
+/* VARIAN WARNA BUBBLE (pilih sesuai foto) */
+.bubble-amber { background: #E3DDD1; }
+.bubble-terracotta { background: #B59F8E; color:#113322; }
+.bubble-sage { background:#B5D7F9; }
+.bubble-lilac { background: #A9A6B7; color:#2a1f3f; }
+.bubble-ocean { background:#98DCB7; }
+
+/* responsive kecil */
+@media (max-width: 767.98px){
+  .prod-card{ height: 360px; }
+  .prod-card .bubble{ max-width: 70%; }
+}
+ 
 /* Category Filter */
 .category-filter {
     margin-bottom: 3rem;

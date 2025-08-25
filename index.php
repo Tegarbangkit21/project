@@ -54,6 +54,83 @@ include 'includes/header.php';
     </div>
 </section>
 
+<section class="products-showcase">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Card 1 -->
+            <div class="col-lg-6" data-aos="fade-up">
+                <a href="products.php" class="text-decoration-none">
+                    <div class="prod-card">
+                        <div class="photo" style="background-image:url('assets/images/product_1754708262_1716.jpg');"></div>
+                        <div class="bubble bubble-terracotta">
+                            <h3>Cheese</h3>
+                            <p>Renyah gurih keju</p>
+                        </div>
+                        <button class="cta">Shop Now</button>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                <a href="products.php" class="text-decoration-none">
+                    <div class="prod-card">
+                        <div class="photo" style="background-image:url('assets/images/product_1754791947_3565.jpg');"></div>
+                        <div class="bubble bubble-amber">
+                            <h3>Original Salt</h3>
+                            <p>Asin pas, bikin nagih</p>
+                        </div>
+                        <button class="cta">Shop Now</button>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="col-lg-6" data-aos="fade-up">
+                <a href="products.php" class="text-decoration-none">
+                    <div class="prod-card">
+                        <div class="photo" style="background-image:url('assets/images/product_1754791983_7218.jpg');"></div>
+                        <div class="bubble bubble-sage">
+                            <h3>Chiken Rosemary</h3>
+                            <p>Aroma herby & savory</p>
+                        </div>
+                        <button class="cta">Shop Now</button>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                <a href="products.php" class="text-decoration-none">
+                    <div class="prod-card">
+                        <div class="photo" style="background-image:url('assets/images/product_1754792003_5110.jpg');"></div>
+                        <div class="bubble bubble-lilac">
+                            <h3>Truffle</h3>
+                            <p>Premium earthy flavor</p>
+                        </div>
+                        <button class="cta">Shop Now</button>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Card 5 (full width kecil/ 6 di lg) -->
+            <div class="col-lg-6" data-aos="fade-up">
+                <a href="products.php" class="text-decoration-none">
+                    <div class="prod-card">
+                        <div class="photo" style="background-image:url('assets/images/product_1754792035_2710.jpg');"></div>
+                        <div class="bubble bubble-ocean">
+                            <h3>Sour Cream &amp; Onion</h3>
+                            <p>Krim asam & bawang</p>
+                        </div>
+                        <button class="cta">Shop Now</button>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
 <!-- About Section -->
 <section class="section-padding bg-light">
     <div class="container">

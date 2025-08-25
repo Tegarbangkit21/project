@@ -49,7 +49,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <a class="nav-link <?= ($current_page == 'about.php') ? 'active' : '' ?>" href="about.php">Tentang Kami</a>
                     </li>
                     <li class="nav-item dropdown dropdown-hover">
-                        <a class="nav-link dropdown-toggle <?= ($current_page == 'products.php' || $current_page == 'katalog.php') ? 'active' : '' ?>"
+                        <a class="nav-link dropdown-toggle <?= ($current_page == 'products.php' || $current_page == 'products.php') ? 'active' : '' ?>"
                             href="products.php"
                             id="navProduk" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Produk
